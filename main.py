@@ -1,13 +1,23 @@
 import pygame
 import random
 import os
+import sys
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class CatchGame:
     def __init__(self):
         pygame.init()
-        self.width, self.height = 900, 600
+        
+        self.width, self.height = 600, 400
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Apple Catcher")
+        
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("Arial", 32)
         
@@ -17,14 +27,16 @@ class CatchGame:
         self.player_rect = pygame.Rect(self.width // 2 - 25, self.height - 60, 50, 50)
         self.item_rect = pygame.Rect(0, -30, 30, 30)
         
+        # 2. Загрузка ресурсов
         try:
-            self.img_idle = pygame.transform.scale(pygame.image.load("assets/images/player_idle.png").convert_alpha(), (50, 50))
-            self.img_left = pygame.transform.scale(pygame.image.load("assets/images/player_l.png").convert_alpha(), (50, 50))
-            self.img_right = pygame.transform.scale(pygame.image.load("assets/images/player_r.png").convert_alpha(), (50, 50))
-            self.item_img = pygame.transform.scale(pygame.image.load("assets/images/stone.png").convert_alpha(), (30, 30))
+            self.img_idle = pygame.transform.scale(pygame.image.load(resource_path("assets/images/player_idle.png")).convert_alpha(), (50, 50))
+            self.img_left = pygame.transform.scale(pygame.image.load(resource_path("assets/images/player_l.png")).convert_alpha(), (50, 50))
+            self.img_right = pygame.transform.scale(pygame.image.load(resource_path("assets/images/player_r.png")).convert_alpha(), (50, 50))
+            self.item_img = pygame.transform.scale(pygame.image.load(resource_path("assets/images/stone.png")).convert_alpha(), (30, 30))
             self.player_img = self.img_idle
             self.use_assets = True
-        except:
+        except Exception as e:
+            print(f"Ошибка загрузки ассетов: {e}")
             self.use_assets = False
 
         self.reset_game()
